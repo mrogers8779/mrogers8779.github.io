@@ -324,11 +324,111 @@
   }
 
   /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .project-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-card-header {
+    padding: 1.8rem 1.8rem 0;
+  }
+
+  .project-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.7rem;
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 2px;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(0,212,255,0.05);
+    margin-bottom: 1rem;
+  }
+
+  .project-card h3 {
+    font-family: var(--heading-font);
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 0.8rem;
+    line-height: 1.2;
+  }
+
+  .project-card-body {
+    padding: 1rem 1.8rem 1.8rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    flex: 1;
+  }
+
+  .project-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-tool {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--muted);
+    background: var(--surface2);
+    letter-spacing: 0.05em;
+  }
+
+  .project-card-footer {
+    border-top: 1px solid var(--border);
+    padding: 1rem 1.8rem;
+    display: flex;
+    gap: 0.8rem;
+  }
+
   .projects-placeholder {
     background: var(--surface);
     border: 1px dashed var(--border);
     border-radius: 4px;
-    padding: 4rem;
+    padding: 3rem;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -342,24 +442,24 @@
   }
 
   .placeholder-icon {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    margin-bottom: 1rem;
     display: block;
   }
 
   .projects-placeholder h3 {
     font-family: var(--heading-font);
     font-weight: 700;
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
     color: var(--text);
   }
 
   .projects-placeholder p {
     color: var(--muted);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     max-width: 500px;
-    margin: 0 auto 2rem;
+    margin: 0 auto;
     line-height: 1.8;
   }
 
@@ -368,7 +468,7 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 0.8rem;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
   }
 
   .coming-soon-tag {
@@ -746,15 +846,43 @@
   <div class="section-label">Work</div>
   <h2>Projects</h2>
 
+  <div class="projects-grid">
+
+    <!-- CAPSTONE PROJECT CARD -->
+    <div class="project-card reveal">
+      <div class="project-card-header">
+        <div class="project-badge">📍 MBA Capstone · GIS Analytics</div>
+        <h3>NC DMV Site Selection Study</h3>
+      </div>
+      <div class="project-card-body">
+        <p class="project-desc">
+          Partnered with the NC Department of Transportation to identify optimal locations for new DMV offices ahead of the federal REAL ID Act deadline. Applied GIS spatial analysis, AHP weighting, and multi-criteria decision modeling to rank 18 candidate sites across North Carolina — with Bahama (Durham Co.) emerging as the top recommendation.
+        </p>
+        <div class="project-tools">
+          <span class="project-tool">ArcGIS</span>
+          <span class="project-tool">Excel</span>
+          <span class="project-tool">AHP</span>
+          <span class="project-tool">MCDA</span>
+          <span class="project-tool">GIS Raster Analysis</span>
+          <span class="project-tool">Supply-Demand Modeling</span>
+        </div>
+      </div>
+      <div class="project-card-footer">
+        <a href="dmv-capstone-project.html" class="btn btn-primary" style="flex:1; justify-content:center;">View Project →</a>
+        <a href="DMV_Capstone_Presentation.pdf" target="_blank" class="btn btn-ghost" style="flex:1; justify-content:center;">Download PDF ↓</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- More coming soon -->
   <div class="projects-placeholder reveal">
-    <span class="placeholder-icon">📊</span>
-    <h3>Projects Coming Soon</h3>
+    <span class="placeholder-icon">🔧</span>
+    <h3>More Projects on the Way</h3>
     <p>
-      I'm currently building out my data analysis portfolio. Check back soon for projects
-      involving SQL analysis, Excel dashboards, and operational data insights.
-      In the meantime, feel free to reach out directly.
+      I'm actively building out my data analysis portfolio. Check back soon for projects
+      involving SQL, Excel dashboards, and Power BI reports.
     </p>
-    <a href="#contact" class="btn btn-ghost">Get in Touch →</a>
     <div class="coming-soon-tags">
       <span class="coming-soon-tag">SQL Analysis</span>
       <span class="coming-soon-tag">Excel Dashboards</span>
