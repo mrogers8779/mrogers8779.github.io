@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House-Level Mortality Analysis | Matthew Rogers</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --surface2: #1a1a24;
+  --border: #2a2a3a;
+  --accent: #00d4ff;
+  --accent2: #7b5ea7;
+  --accent3: #00ff9d;
+  --text: #e8e8f0;
+  --muted: #6b6b80;
+  --heading-font: 'Syne', sans-serif;
+  --mono-font: 'DM Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono-font);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 4rem;
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--heading-font);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+.back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-hero {
+  padding: 9rem 4rem 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.project-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 2px;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(0,212,255,0.05);
+  margin-bottom: 1.2rem;
+}
+h1 {
+  font-family: var(--heading-font);
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+.page-subtitle {
+  font-family: var(--heading-font);
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  font-weight: 600;
+  color: var(--accent3);
+  margin-bottom: 1.5rem;
+}
+.disclosure {
+  font-size: 0.78rem;
+  color: var(--muted);
+  border-left: 2px solid var(--accent2);
+  padding-left: 1rem;
+  max-width: 700px;
+  line-height: 1.8;
+}
+
+section {
+  padding: 3rem 4rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.section-label::before {
+  content: '';
+  width: 1.5rem;
+  height: 1px;
+  background: var(--accent);
+}
+h2 {
+  font-family: var(--heading-font);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+p, li {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.9;
+  margin-bottom: 1rem;
+  max-width: 750px;
+}
+strong { color: var(--text); font-weight: 600; }
+ul { margin-left: 1.4rem; margin-bottom: 1.5rem; }
+li { margin-bottom: 0.6rem; }
+
+.tool-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.tool-tag {
+  font-size: 0.72rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted);
+  background: var(--surface2);
+  letter-spacing: 0.05em;
+}
+
+.media-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.media-card video, .media-card img {
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  display: block;
+}
+.media-caption {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.8rem;
+  margin-bottom: 0;
+}
+
+.finding-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent3);
+  border-radius: 4px;
+  padding: 1.3rem 1.5rem;
+  margin-bottom: 1rem;
+}
+.finding-card p { margin-bottom: 0; max-width: none; }
+
+.code-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.2rem 1.5rem;
+  overflow-x: auto;
+  font-size: 0.78rem;
+  color: var(--accent3);
+  margin-bottom: 1.5rem;
+  white-space: pre;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.8rem;
+  font-family: var(--mono-font);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 400;
+  border: 1px solid var(--accent);
+}
+.btn-primary:hover {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: 0 0 20px rgba(0,212,255,0.3);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.btn-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .page-hero { padding: 7rem 1.5rem 2rem; }
+  section { padding: 2rem 1.5rem; }
+  footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">MR<span>.</span></a>
+  <a href="index.html#projects" class="back-link">← Back to Projects</a>
+</nav>
+
+<div class="page-hero">
+  <div class="project-badge">🔍 Self-Directed Project · SQL & Power BI</div>
+  <h1>House-Level Mortality Analysis</h1>
+  <div class="page-subtitle">Surfacing Reporting Gaps Farm-Level Aggregates Hide</div>
+  <p class="disclosure">
+    <strong>A note on the data:</strong> This project uses a synthetic dataset built to mirror the structure of real production data I worked with as Assistant Production Controller/Analyst at Prestage Farms — batches, houses, farms, hatcheries, and daily mortality counts. No proprietary or confidential employer data is used. The schema, analytical approach, and findings reflect a real gap I identified on the job but wasn't able to fully build out at the time.
+  </p>
+</div>
+
+<section>
+  <div class="section-label">Background</div>
+  <h2>The Problem</h2>
+  <p>
+    Standard production reporting at my previous role provided pig mortality and population data only at the <strong>farm level</strong>. That made it difficult to catch localized issues, refine driver load scheduling (which depends on accurate live population counts), or evaluate individual nursery house performance. I identified this gap on the job but wasn't able to fully build it out at the time — this project revisits and completes that analysis independently.
+  </p>
+</section>
+
+<section>
+  <div class="section-label">Method</div>
+  <h2>Approach</h2>
+  <p>Using SQL Server, I built a layered analysis:</p>
+  <ul>
+    <li>Aggregated placement and mortality data at the <strong>nursery house level</strong> rather than farm level, using CTEs to avoid join fan-out errors between placement and mortality records</li>
+    <li>Calculated mortality rate as a percentage of head placed per house, with divide-by-zero protection via <strong>NULLIF</strong></li>
+    <li>Built a <strong>window-function-based cumulative mortality view</strong> (SUM() OVER PARTITION BY), normalized to "day of batch" so houses with different placement dates could be compared on a common timeline</li>
+  </ul>
+  <p>Visualized in Power BI across two report views: a farm/house mortality overview, and a mortality-timing comparison across flagged houses.</p>
+
+  <div class="tool-row">
+    <span class="tool-tag">SQL Server</span>
+    <span class="tool-tag">T-SQL / CTEs</span>
+    <span class="tool-tag">Window Functions</span>
+    <span class="tool-tag">Power BI Desktop</span>
+    <span class="tool-tag">Data Modeling</span>
+  </div>
+
+  <p style="font-size:0.8rem; margin-bottom:0.5rem;">Sample query — house-level mortality summary with fan-out-safe aggregation:</p>
+  <div class="code-block">WITH TotalMort AS (
+    SELECT GroupKeyID, SUM(HeadMort) AS TotalMort
+    FROM Mortality
+    GROUP BY GroupKeyID
+)
+SELECT
+    g.FarmName,
+    g.HouseID,
+    SUM(g.HeadPlaced) AS TotalHead,
+    SUM(t.TotalMort) AS OverallMort,
+    CAST(SUM(t.TotalMort) * 100.0 / NULLIF(SUM(g.HeadPlaced),0) AS DECIMAL(10,2)) AS MortalityPct
+FROM Groups AS g
+JOIN TotalMort AS t ON g.GroupKeyID = t.GroupKeyID
+GROUP BY g.FarmName, g.HouseID</div>
+</section>
+
+<section>
+  <div class="section-label">Dashboard</div>
+  <h2>Walkthrough</h2>
+
+  <div class="media-card">
+    <!-- Replace src below with your actual video filename once uploaded to the repo -->
+    <video controls poster="">
+      <source src="mortality-dashboard-walkthrough.mp4" type="video/mp4">
+      Your browser doesn't support embedded video — see the PDF below instead.
+    </video>
+    <p class="media-caption">90-second walkthrough of the two-page Power BI dashboard, narrated.</p>
+  </div>
+
+  <div class="btn-row">
+    <a href="mortality-dashboard.pdf" target="_blank" class="btn btn-primary">Download Dashboard PDF ↓</a>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">Results</div>
+  <h2>Findings</h2>
+
+  <div class="finding-card">
+    <p><strong>Farm-level reporting masked meaningful variation.</strong> 4 of ~28 houses ran mortality rates clearly above the norm, despite their parent farms appearing unremarkable in aggregate.</p>
+  </div>
+  <div class="finding-card">
+    <p><strong>A consistent U-shaped mortality pattern emerged</strong> across flagged houses: an early spike shortly after placement, a stable middle period, and a second rise late in the batch.</p>
+  </div>
+  <div class="finding-card">
+    <p><strong>This points to two distinct operational factors, not one</strong> — early mortality is more consistent with placement stress on newly weaned pigs, while late-stage mortality is more consistent with house density or ventilation limitations as pigs approach market weight. Both also affect average pig size, and therefore how many head safely fit on a transport load.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-label">Next Steps</div>
+  <h2>Recommendation</h2>
+  <p>
+    House-level mortality tracking should be a standard, recurring report rather than an ad hoc query — it surfaces problems farm-level aggregates hide, and day-of-batch normalization makes houses directly comparable regardless of placement date. Given the distinct early/late mortality pattern, flagged houses warrant separate review of placement/weaning conditions and late-stage housing density, rather than a single blanket fix. More accurate house-level population data would also directly improve load-scheduling precision — the original motivation for this project.
+  </p>
+</section>
+
+<footer>
+  <span>© 2026 Matthew Rogers</span>
+  <a href="index.html" class="back-link">← Back to Projects</a>
+</footer>
+
+</body>
+</html>
